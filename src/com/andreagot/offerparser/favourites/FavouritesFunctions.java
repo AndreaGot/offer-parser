@@ -19,6 +19,8 @@ public class FavouritesFunctions implements Favourite {
 	public boolean addFavourite(String path, String favourite) {
 		try {
 			List<String> lines = Arrays.asList(favourite);
+			File checkFile = new File("resources/" + path);
+			checkFile.createNewFile();
 			Path file = Paths.get("resources/" + path);
 			// Files.write(file, lines, Charset.forName("UTF-8"));
 			Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
@@ -35,6 +37,14 @@ public class FavouritesFunctions implements Favourite {
 
 	public boolean removeFavourite(String path, String favourite) {
 
+		return true;
+	}
+
+	public boolean getFavouritesLink() {
+		return getFavouritesLink("favourites.txt", "favouriteLinks.txt");
+	}
+
+	public boolean getFavouritesLink(String source, String target) {
 		return true;
 	}
 }
