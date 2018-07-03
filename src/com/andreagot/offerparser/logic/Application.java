@@ -11,60 +11,46 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.andreagot.offerparser.favourites.FavouritesFunctions;
+import com.andreagot.offerparser.parser.ParsingFunctions;
+
 public class Application {
 
 	public static void main(String[] args) {
-		// URL url = new
-		// URL("https://www.magiccorner.it//it/info-prodotto/284/1078/112556/luna-spettrale-gisela-the-broken-blade-brisela-voice-of-nightmares");
-		// BufferedReader reader = new BufferedReader(new
-		// InputStreamReader(url.openStream(), "UTF-8"));
-		// for (String line; (line = reader.readLine()) != null;) {
-		// System.out.println(line);
-		// }
-		String baseUrl = "https://www.magiccorner.it//it/info-prodotto/284/278/";
-		int rangeMin = 46162;
-		int rangeMax = 70561;
+		FavouritesFunctions ff = new FavouritesFunctions();
+		ParsingFunctions pa = new ParsingFunctions();
 
-		HashSet<String> doubleOffers = new HashSet<String>();
-		for (int i = rangeMin; i <= rangeMax; i++) {
-			try {
-				Document doc = Jsoup.connect(baseUrl + Integer.toString(i)).get();
-				String title = doc.title();
-				if (i == rangeMin || i == rangeMax) {
-					System.out.println(System.currentTimeMillis());
-				}
-
-				// Cerco se la pagina ha delle offerte
-				if (doc.getElementsByClass("badge-red").isEmpty()) {
-					// System.out.println("NO OFFERS for " + title);
-					continue;
-				}
-
-				Elements tableRows = doc.select("tr");
-				for (Element tableRow : tableRows) {
-					Elements offers = tableRow.getElementsByClass("badge-red");
-					StringBuilder sb = new StringBuilder(title);
-					if (!offers.isEmpty()) {
-						sb.append(" - ");
-						sb.append(tableRow.getElementsByClass("label-lingua").get(0).text());
-						if (!tableRow.getElementsByClass("label-foil").isEmpty()) {
-							sb.append(" - ");
-							sb.append(tableRow.getElementsByClass("label-foil").get(0).text());
-						}
-						sb.append(" - ");
-						sb.append(tableRow.getElementsByClass("label-1093").get(0).text());
-						sb.append(" - ");
-						sb.append(offers.get(0).text());
-
-						if (doubleOffers.add(sb.toString())) {
-							System.out.println(sb.toString());
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
+		if (args.length == 0) {
+			System.out.println("Please select: \n Pr (Parse offers by range), \n Pf (Parse offers by favourite file ) \n A (Add favourite) \n R (Remove Favourite)!");
+			return;
 		}
+		
+		if(args.length == 1) {
+			System.out.println("How to use this application:");
+			System.out.println("First parameter: Pr (Parse offers by range), Pf (Parse offers by favourite file) A (Add favourite) or R (Remove Favourite)");
+			System.out.println("");
+			System.out.println("Pr needs 3 parameters: URL, minRange, maxRange");
+			System.out.println("Pr needs 1 parameter: URL, [File]");
+			System.out.println("A needs 2 parameters: [File] and Favourite to add");
+			System.out.println("R needs 2 parameters: [File] and Favourite to remove");
+		}
+
+		switch (args[0]) {
+		case "P":
+			String baseUrl = args[1];
+			int rangeMin = 46162;
+			int rangeMax = 70561;
+			pa.parsePrices(baseUrl, rangeMin, rangeMax);
+			break;
+		case "A":
+			if (args.length > 2) {
+				ff.addFavourite(args[2]);
+			}
+			break;
+		case "R":
+			ff.removeFavourite(args[2]);
+			break;
+		}
+		return;
 	}
 }
