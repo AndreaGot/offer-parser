@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,17 +24,19 @@ public class Application {
 		String baseUrl = "https://www.magiccorner.it//it/info-prodotto/284/278/";
 		int rangeMin = 46162;
 		int rangeMax = 70561;
+
+		HashSet<String> doubleOffers = new HashSet<String>();
 		for (int i = rangeMin; i <= rangeMax; i++) {
 			try {
 				Document doc = Jsoup.connect(baseUrl + Integer.toString(i)).get();
 				String title = doc.title();
-				if(i == rangeMin || i== rangeMax) {
+				if (i == rangeMin || i == rangeMax) {
 					System.out.println(System.currentTimeMillis());
 				}
 
 				// Cerco se la pagina ha delle offerte
 				if (doc.getElementsByClass("badge-red").isEmpty()) {
-//					System.out.println("NO OFFERS for " + title);
+					// System.out.println("NO OFFERS for " + title);
 					continue;
 				}
 
@@ -53,7 +56,9 @@ public class Application {
 						sb.append(" - ");
 						sb.append(offers.get(0).text());
 
-						System.out.println(sb.toString());
+						if (doubleOffers.add(sb.toString())) {
+							System.out.println(sb.toString());
+						}
 					}
 				}
 			} catch (Exception e) {
