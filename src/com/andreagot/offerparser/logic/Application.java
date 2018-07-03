@@ -24,8 +24,8 @@ public class Application {
 			System.out.println("Please select: \n Pr (Parse offers by range), \n Pf (Parse offers by favourite file ) \n A (Add favourite) \n R (Remove Favourite)!");
 			return;
 		}
-		
-		if(args.length == 1) {
+
+		if (args.length == 1) {
 			System.out.println("How to use this application:");
 			System.out.println("First parameter: Pr (Parse offers by range), Pf (Parse offers by favourite file) A (Add favourite) or R (Remove Favourite)");
 			System.out.println("");
@@ -44,11 +44,13 @@ public class Application {
 			break;
 		case "A":
 			if (args.length > 2) {
-				ff.addFavourite(args[2]);
+				ff.addFavourite(args[1], args[2]);
+			} else {
+				ff.addFavourite(args[1]);
 			}
 			break;
 		case "R":
-			ff.removeFavourite(args[2]);
+			ff.removeFavourite(args[1]);
 			break;
 		}
 		return;
